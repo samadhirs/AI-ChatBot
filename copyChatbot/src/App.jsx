@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import Header from "./components/Header";
 import ChatMessage from "./components/ChatMessage";
-import { formatTime } from "../utils/chatutils";
+import { formatTime, getRandomResponse } from "../utils/chatutils";
 import LoadingIndicator from "./components/LoadingIndicator";
 import ChatInput from "./components/ChatInput";
 
@@ -24,15 +24,44 @@ function App()
       setDarkMode(!darkMode);
     };
 
+    const handleSendMessage = () => {
+      const userMessage = {
+        id: Date.now().toString(),
+        text: input,
+        sender: "user",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, userMessage]);
+      setinput("");
+      setIsLoading(true);
+
+      setTimeout(()=>{
+        const botMessage = {
+          id: (Date.now() + 1).toString(),
+          text: getRandomResponse(input),
+          sender: "bot",
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, botMessage]);
+        setIsLoading(false);
+      }, 1500);
+    };
+
     return (
     <div className="flex flex-col h-screen">
       <Header toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
         <div className="max-w-5xl mx-auto space-y-4">
-          <ChatMessage 
-          darkMode={darkMode} 
-          messages={messages}
-          formatTime={formatTime}/>
+          {messages.map((message) => {
+            return (
+              <ChatMessage 
+              key={message.id}
+              darkMode={darkMode} 
+              messages={message}
+              formatTime={formatTime}
+              />
+            )
+          })}
 
           {isLoading && <LoadingIndicator darkMode={darkMode} />}
 
@@ -42,7 +71,10 @@ function App()
       darkMode={darkMode}
       input={input}
       setinput={setinput}
-      loding={isLoading}/>
+      loading={isLoading}
+      handleSendMessage={handleSendMessage}
+      />
+      
     </div>
     );
   }
