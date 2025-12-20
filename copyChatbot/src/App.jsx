@@ -7,6 +7,7 @@ import { formatTime } from "../utils/chatutils";
 function App()
   {
     const [darkMode, setDarkMode] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [messages, setMessages] = useState([
       {
         id:1,
@@ -29,6 +30,8 @@ function App()
           darkMode={darkMode} 
           messages={messages}
           formatTime={formatTime}/>
+
+          {isLoading && <LoadingIndicator darkMode={darkMode} />}
 
           <div>
 
