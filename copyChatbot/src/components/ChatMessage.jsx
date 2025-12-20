@@ -1,7 +1,7 @@
 import { User, Bot } from 'lucide-react'; 
 import React from 'react'
 
-function ChatMessage({ darkMode, messages }) {
+function ChatMessage({ darkMode, messages, formatTime }) {
   return (
     <div className={`${messages.sender === "user" ? "justify-end" : "justify-start"}`}>
         <div className={`flex max-w-[80%] md:max-w-[70%] rounded-2xl px-5 py-3.5 
@@ -26,9 +26,11 @@ function ChatMessage({ darkMode, messages }) {
                         "text-gray-400":
                         "text-gray-500"
                     }`}>
-
+                        {formatTime(messages[0].timestamp)}
                     </span>
                 </div>
+                <p className="text-sm md:text-base whitespace-pre-wrap break-words 
+                leading-relaxed">{messages[0].text}</p>
             </div>
         </div>
     </div>
