@@ -1,6 +1,7 @@
+import { Send } from "lucide-react";
 import React from 'react'
 
-function ChatInput({ darkMode, input, setinput, loading }) {
+function ChatInput({ darkMode, input, setinput, loading, handleSendMessage }) {
   return (
     <div className={`${
         darkMode 
@@ -10,9 +11,30 @@ function ChatInput({ darkMode, input, setinput, loading }) {
 
     <div className="max-w-5xl mx-auto">
         <div className="flex items-center space-x-3">
-            <input type="text" 
-            placeholder="Type Your Nessage"
+            <input 
+            type="text" 
+            value={input}
+            onChange={(e) => setinput(e.target.value)}
+            onKeyDown={(e) => {
+                if(e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                }
+            }}
+            placeholder="Type Your Message"
+            className={`flex-1 border ${
+                darkMode
+                ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                : "bg-white border-gray-300 text-gray-900"
+                } rounded-full px-5 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500
+                focus:border-transparent`}
              />
+            <button className={`p-3 rounded-full transition-colors shadow-md cursor-pointer`}
+                onClick={handleSendMessage}
+                disabled={loading || !input.trim()}
+            >
+                <Send className={`${darkMode ? "text-white" : "text-gray-800"}`}/>
+            </button>
 
         </div>
     </div>
