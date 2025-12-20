@@ -3,6 +3,7 @@ import { useState } from "react";
 import Header from "./components/Header";
 import ChatMessage from "./components/ChatMessage";
 import { formatTime } from "../utils/chatutils";
+import LoadingIndicator from "./components/LoadingIndicator";
 
 function App()
   {
