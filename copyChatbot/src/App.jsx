@@ -1,10 +1,10 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Header from "./components/Header";
 import ChatMessage from "./components/ChatMessage";
 import { formatTime, getRandomResponse } from "../utils/chatutils";
 import LoadingIndicator from "./components/LoadingIndicator";
 import ChatInput from "./components/ChatInput";
+import { generateContent } from "./Services/geminiApi";
 
 function App()
   {
@@ -22,6 +22,7 @@ function App()
 
     const toggleDarkMode = () => {
       setDarkMode(!darkMode);
+      
     };
 
     const handleSendMessage = () => {
@@ -38,32 +39,32 @@ function App()
       setTimeout(()=>{
         const botMessage = {
           id: (Date.now() + 1).toString(),
-          text: getRandomResponse(input),
+          text: generateContent(input),
           sender: "bot",
           timestamp: new Date(),
-        }
+        };
+
         setMessages((prev) => [...prev, botMessage]);
         setIsLoading(false);
       }, 1500);
     };
 
-    return (
+  return (
     <div className="flex flex-col h-screen">
       <Header toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
         <div className="max-w-5xl mx-auto space-y-4">
-          {messages.map((message) => {
-            return (
-              <ChatMessage 
-              key={message.id}
-              darkMode={darkMode} 
-              messages={message}
-              formatTime={formatTime}
-              />
-            )
-          })}
-
-          {isLoading && <LoadingIndicator darkMode={darkMode} />}
+            {messages.map((message) => {
+              return(
+                <ChatMessage 
+                  key={message.id}
+                  darkMode={darkMode} 
+                  messages={message}
+                  formatTime={formatTime}
+                />
+              );
+            })}
+            {isLoading && <LoadingIndicator darkMode={darkMode} />}
 
         </div>
       </div>
@@ -73,10 +74,10 @@ function App()
       setinput={setinput}
       loading={isLoading}
       handleSendMessage={handleSendMessage}
-      />
-      
+      /> 
     </div>
     );
   }
 
-  export default App;
+
+  export default App

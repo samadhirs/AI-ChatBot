@@ -1,8 +1,8 @@
 export const getRandomResponse = () => {
     const botResponses = [
+        "I'm here to help! What do you need assistance with?",
         "I understand your question. Let me think about that....",
         "That's an interesting point! Here's what I know....",
-        "I'm here to help! What do you need assistance with?",
         "Sure! Could you please provide more details?",
         "That's interesting! Tell me more.",
         "I'm not sure I understand. Could you clarify?",
