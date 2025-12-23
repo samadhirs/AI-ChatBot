@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/*import React, { useState } from "react";
 import Header from "./components/Header";
 import ChatMessage from "./components/ChatMessage";
 import { formatTime, getRandomResponse } from "../utils/chatutils";
@@ -80,4 +80,93 @@ function App()
   }
 
 
-  export default App
+  export default App*/ 
+
+  /*..............................ChatGPT Code.....................................*/
+
+  import React, { useState } from "react";
+import Header from "./components/Header";
+import ChatMessage from "./components/ChatMessage";
+import { formatTime } from "../utils/chatutils";
+import LoadingIndicator from "./components/LoadingIndicator";
+import ChatInput from "./components/ChatInput";
+import { generateContent } from "./Services/geminiApi";
+
+function App() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [input, setinput] = useState("");
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      text: "Hello! How can I assist you today?",
+      sender: "bot",
+      timestamp: new Date(),
+    },
+  ]);
+
+  const toggleDarkMode = () => setDarkMode(!darkMode);
+
+  const handleSendMessage = async () => {
+    if (!input.trim()) return;
+
+    const userMessage = {
+      id: Date.now().toString(),
+      text: input,
+      sender: "user",
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMessage]);
+    setinput("");
+    setIsLoading(true);
+
+    try {
+      const botReply = await generateContent(input);
+      const botMessage = {
+        id: (Date.now() + 1).toString(),
+        text: botReply,
+        sender: "bot",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (err) {
+      const errorMessage = {
+        id: (Date.now() + 2).toString(),
+        text: "Sorry, I couldn't generate a response.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-screen">
+      <Header toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+      <div className="flex-1 overflow-y-auto p-4 md:p-6">
+        <div className="max-w-5xl mx-auto space-y-4">
+          {messages.map((message) => (
+            <ChatMessage
+              key={message.id}
+              darkMode={darkMode}
+              messages={message}
+              formatTime={formatTime}
+            />
+          ))}
+          {isLoading && <LoadingIndicator darkMode={darkMode} />}
+        </div>
+      </div>
+      <ChatInput
+        darkMode={darkMode}
+        input={input}
+        setinput={setinput}
+        loading={isLoading}
+        handleSendMessage={handleSendMessage}
+      />
+    </div>
+  );
+}
+
+export default App;
